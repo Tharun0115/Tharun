@@ -1,13 +1,11 @@
-const express = require('express');
-const app = express();
-const controllers = require('../controllers');
-const middlewares = require('../middlewares');
+async function validateRequestBody (req, res, next) {
+    const requestBody = req.body;
 
-// Mounting routes with middlewares and controllers
-app.get("/", controllers.getTodoList)
+    if (!requestBody.newItem) {
+        return res.status(400).send(`<h1>A TODO List item was not found in the request body</h1>`);
+    } else {
+        next(); // Pass the execution to the controllers
+    }
+}
 
-app.post("/", middlewares.validateRequestBody, controllers.createTodoItem);
-
-app.get("/work", controllers.getWorkList);
-
-module.exports = app;
+module.exports = {validateRequestBody};
